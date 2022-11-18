@@ -65,7 +65,7 @@ jobs:
           AWS_REGION: ${{ secrets.REGION }}
 
       - name: Copy IP into inventory file
-        run: cd ./terraform && echo "$(terraform output PublicIp)" >> ./ansible/inventory.txt
+        run: cd ./terraform && echo "$(terraform output PublicIp)" >> ../ansible/inventory.txt
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
