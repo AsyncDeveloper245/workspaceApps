@@ -38,4 +38,37 @@ jobs:
           tags: |
             asyncdeveloper/grammar-check-backend:latest
             
-    
+  create_dev_envirtonment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Make install script Executable
+        run : chmod +x ./terraform_install.sh
+
+
+      - name: Install Terraform 
+        run: ./terraform_install.sh
+
+
+      - name: Cd into root directory and initialize terraform
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.REGION }}
+        run: cd ./terraform && terraform init -input=false
+
+
+      - name: Build Infrastructure
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.REGION }}  
+        run: terraform apply -auto-approve -input=false
+
+      - name: Get Public IP
+        run: echo "PublicIP=$(terraform output PublicIp)" >> $GITHUB_ENV
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.REGION }}
