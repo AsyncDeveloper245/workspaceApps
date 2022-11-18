@@ -34,8 +34,8 @@ jobs:
         with:
           context: ./packages/api
           platforms: linux/amd64,linux/arm64
-          load: true
+          push: true
           tags: |
-            grammar-check-backend:latest
+            grammar-check-backend,latest
             
     
