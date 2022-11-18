@@ -36,6 +36,6 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            grammar-check-backend:latest
+            asyncdeveloper/grammar-check-backend:latest
             
     
