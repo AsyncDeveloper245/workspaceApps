@@ -83,5 +83,5 @@ jobs:
           echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
       - name: Deploy via ansible
-        working-directory: ./ansible
+        working-directory: ansible
         run: ansible-playbook deploy-app.yml -i inventory.txt
