@@ -84,4 +84,4 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
       - name: Deploy via ansible
         working-directory: ./ansible
-        run: ansible-playbook ./ansible/deploy-app.yml -i ./ansible/inventory.txt
+        run: ansible-playbook deploy-app.yml -i inventory.txt
