@@ -55,11 +55,38 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.REGION }}
-        run: terraform apply -auto-approve -input=false
+        run: cd ./terraform && terraform apply -auto-approve -input=false
 
       - name: Get Public IP
-        run: echo "PublicIP=$(terraform output PublicIp)" >> $GITHUB_ENV
+        run: cd ./terraform && echo "PublicIP=$(terraform output PublicIp)" >> $GITHUB_ENV
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.REGION }}
+
+      - name: Copy IP into inventory file
+        run: cd ./terraform && echo "PublicIP=$(terraform output PublicIp)" >> ./ansible/inventory.txt
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.REGION }}
+
+  deploy_docker_container:
+    needs: create_dev_envirtonment
+    runs-on: ubuntu-latest
+    steps:
+      - name: install ansible
+        run: sudo apt update && sudo apt install software-properties-common && sudo apt-add-repository --yes --update ppa:ansible/ansible && sudo apt install ansible
+      - name: Run playbook
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          # Required, playbook filepath
+          playbook: deploy-app.yml
+          # Optional, directory where playbooks live
+          directory: ./ansible
+          # Optional, SSH private key
+          key: ${{secrets.SSH_PRIVATE_KEY}}
+          # Optional, literal inventory file contents
+          inventory: |
+            [web]
+            ${{ env.PublicIP }}

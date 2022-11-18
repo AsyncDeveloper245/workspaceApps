@@ -7,6 +7,16 @@ terraform {
 }
 
 
+// resource "tls_private_key" "pk" {
+//   algorithm = "RSA"
+//   rsa_bits  = 4096
+// }
+
+// resource "aws_key_pair" "generated_key" {
+//   key_name   = "hng-actions"
+//   public_key = tls_private_key.pk.public_key_openssh
+// }
+
 resource "aws_vpc" "devcloud" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_hostnames = true
@@ -63,6 +73,7 @@ resource "aws_instance" "public_instance" {
   key_name                    = aws_key_pair.devc_auth.id
   vpc_security_group_ids      = [aws_security_group.public_sg.id]
   associate_public_ip_address = true
+  key_name                   = "hng-pk"
 
   }
 

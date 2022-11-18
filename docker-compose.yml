@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  backend:
+    image: asyncdeveloper/grammar-check-backend
+    ports:
+      - "3000:3000"
+    networks:
+      - hng-internal
+
+  nginx-server:
+    image: nginx
+    ports:
+      - "80:80"
+    networks:
+      - hng-internal
+
+networks:
+  hng-internal:
