@@ -85,3 +85,5 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
       - name: Deploy via ansible
         run: ansible-playbook ./ansible/deploy-app.yml -i ./ansible/inventory.txt
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: false
