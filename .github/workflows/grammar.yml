@@ -2,34 +2,27 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
-
-  build_and_puch_docker_image:
-
+  build_and_push_docker_image:
     runs-on: ubuntu-latest
 
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v3
-      -
-        name: Set up QEMU
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
-      -
-        name: Set up Docker Buildx
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-      -
-        name: Login to Docker Hub
+      - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}   
-      -
-        name: Build and push
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push
         uses: docker/build-push-action@v3
         with:
           context: ./packages/api
@@ -37,19 +30,18 @@ jobs:
           push: true
           tags: |
             asyncdeveloper/grammar-check-backend:latest
-            
+
   create_dev_envirtonment:
+    needs: build_and_push_docker_image
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
       - name: Make install script Executable
-        run : chmod +x ./terraform_install.sh
+        run: chmod +x ./terraform_install.sh
 
-
-      - name: Install Terraform 
+      - name: Install Terraform
         run: ./terraform_install.sh
-
 
       - name: Cd into root directory and initialize terraform
         env:
@@ -58,12 +50,11 @@ jobs:
           AWS_REGION: ${{ secrets.REGION }}
         run: cd ./terraform && terraform init -input=false
 
-
       - name: Build Infrastructure
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.REGION }}  
+          AWS_REGION: ${{ secrets.REGION }}
         run: terraform apply -auto-approve -input=false
 
       - name: Get Public IP
