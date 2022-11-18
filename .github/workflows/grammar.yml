@@ -75,6 +75,7 @@ jobs:
     needs: create_dev_envirtonment
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - name: install ansible
         run: sudo apt update && sudo apt install software-properties-common && sudo apt-add-repository --yes --update ppa:ansible/ansible && sudo apt install ansible
       - name: Output SSH key to file
