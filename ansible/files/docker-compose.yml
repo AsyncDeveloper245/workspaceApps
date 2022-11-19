@@ -8,12 +8,5 @@ services:
     networks:
       - hng-internal
 
-  nginx-server:
-    image: nginx
-    ports:
-      - "80:80"
-    networks:
-      - hng-internal
-
 networks:
   hng-internal:
