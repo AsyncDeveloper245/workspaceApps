@@ -84,6 +84,6 @@ jobs:
           echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
           chmod 400 ~/.ssh/id_rsa
       - name: Deploy via ansible
-        run: ansible-playbook --private-key=~/.ssh/id_rsa ./ansible/deploy-app.yml -i ./ansible/inventory.txt
+        run: ansible-playbook --private-key=~/.ssh/id_rsa ./ansible/deploy-app.yml -i ./ansible/inventory.txt -vvv
         env:
           ANSIBLE_HOST_KEY_CHECKING: false
