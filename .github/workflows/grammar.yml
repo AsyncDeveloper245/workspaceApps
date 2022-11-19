@@ -83,6 +83,9 @@ jobs:
           mkdir ~/.ssh
           echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
           chmod 400 ~/.ssh/id_rsa
+      - name: Make compose file Executable
+        run: chmod +x ./compose_install.sh
+
       - name: Deploy via ansible
         run: ansible-playbook --private-key=~/.ssh/id_rsa ./ansible/deploy-app.yml -i ./ansible/inventory.txt -vvv
         env:
