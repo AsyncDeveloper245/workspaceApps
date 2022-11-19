@@ -10,7 +10,7 @@
 
   tasks:
     - name: Install Docker compose
-      script: ./compose_install.sh
+      script: compose_install.sh
 
     - name: copy docker-compose file from host to remote
       become: true
