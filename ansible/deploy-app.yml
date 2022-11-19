@@ -53,6 +53,13 @@
       pip:
         name: docker
 
+    - name: Update apt and install docker-compose
+      become: true
+      apt:
+        name: docker-compose
+        state: latest
+        update_cache: true
+
     - name: copy docker-compose file from host to remote
       become: true
       copy:
