@@ -56,7 +56,7 @@
     - name: copy docker-compose file from host to remote
       become: true
       copy:
-        src: ../docker-compose.yml
+        src: docker-compose.yml
         dest: /home/ubuntu/docker-compose.yml
 
     - name: run docker-compose up
